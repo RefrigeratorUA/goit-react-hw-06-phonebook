@@ -12,7 +12,6 @@ const Filter = ({ onFilterChange }) => {
 };
 
 Filter.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onFilterChange: PropTypes.func,
 };
 

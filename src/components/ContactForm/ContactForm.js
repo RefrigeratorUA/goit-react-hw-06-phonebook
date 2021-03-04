@@ -1,13 +1,15 @@
 import { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import actions from '../../redux/contacts/contacts-actions';
-// import styles from './ContactForm.module.css';
+import { CSSTransition } from 'react-transition-group';
+import Notification from '../Notification';
+import '../Notification/Notification.css';
 
 class ContactForm extends Component {
   state = {
     name: '',
     number: '',
+    errorMessage: '',
   };
 
   handleChange = event => {
@@ -18,52 +20,69 @@ class ContactForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const { name, number } = this.state;
-    const { onAddContact } = this.props;
+    const { onAddContact, items } = this.props;
+
+    if (!name) return this.showNotification('Please enter contact name');
+    if (!number) return this.showNotification('Please enter contact number');
+    if (items.some(item => item.name === name)) {
+      this.setState({ name: '', number: '' });
+      return this.showNotification(`${name} is already in contacts`);
+    }
 
     onAddContact(name, number);
     this.setState({ name: '', number: '' });
   };
 
+  showNotification = errorMessage => {
+    this.setState({ errorMessage });
+  };
+
   render() {
-    const { name, number } = this.state;
+    const { name, number, errorMessage } = this.state;
+    const isShow = errorMessage ? true : false; // Консоль ругается, еслт in !== boolean
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name
-          <input
-            className="input"
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          ></input>
-        </label>
-        <label>
-          Number
-          <input
-            className="input"
-            type="text"
-            name="number"
-            value={number}
-            onChange={this.handleChange}
-          ></input>
-        </label>
-        <br />
-        <button className="btn" type="submit" disabled={!name && !number}>
-          Add contact
-        </button>
-      </form>
+      <>
+        <div className="Notification-wrapper">
+          <CSSTransition in={isShow} classNames="Notification" timeout={250} unmountOnExit>
+            <Notification onView={this.showNotification} message={errorMessage} />
+          </CSSTransition>
+        </div>
+
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Name
+            <input
+              className="input"
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+          <label>
+            Number
+            <input
+              className="input"
+              type="text"
+              name="number"
+              value={number}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+          <br />
+          <button className="btn" type="submit" disabled={(!name && !number) || errorMessage}>
+            Add contact
+          </button>
+        </form>
+      </>
     );
   }
 }
 
-ContactForm.propTypes = {
-  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-};
+const mapStateToProps = state => state.contacts;
 
 const mapDispatchToProps = dispatch => ({
   onAddContact: (name, number) => dispatch(actions.addContact(name, number)),
 });
 
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

@@ -143,3 +143,10 @@ label {
 .loader {
   text-align: center;
 }
+.btn-count {
+  width: auto;
+  padding: 0;
+  margin: 20px;
+  padding: 5px;
+  font-size: 14px;
+}

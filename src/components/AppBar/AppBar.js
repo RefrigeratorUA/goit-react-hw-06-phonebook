@@ -5,28 +5,15 @@ import Notification from '../Notification';
 import './AppBar.css';
 
 const AppBar = ({ message, onView, isShow }) => {
-  const nodeRef = React.useRef(null);
+  const isError = message ? true : false;
   return (
     <header className="AppBar-wrapper">
-      <CSSTransition
-        nodeRef={nodeRef}
-        in={true}
-        appear={true}
-        classNames="AppBar-logo"
-        timeout={500}
-        unmountOnExit
-      >
-        <Logo nodeRef={nodeRef} />
+      <CSSTransition in={true} appear={true} classNames="AppBar-logo" timeout={500} unmountOnExit>
+        <Logo />
       </CSSTransition>
 
-      <CSSTransition
-        nodeRef={nodeRef}
-        in={isShow}
-        classNames="AppBar-notification"
-        timeout={250}
-        unmountOnExit
-      >
-        <Notification onView={onView} message={message} nodeRef={nodeRef} />
+      <CSSTransition in={isError} classNames="AppBar-notification" timeout={250} unmountOnExit>
+        <Notification onView={onView} message={message} />
       </CSSTransition>
     </header>
   );

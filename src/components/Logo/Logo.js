@@ -1,16 +1,7 @@
-import PropTypes from 'prop-types';
 import './Logo.css';
 
-const Logo = ({ nodeRef }) => {
-  return (
-    <h1 className="logo" ref={nodeRef}>
-      Phonebook
-    </h1>
-  );
-};
-
-Logo.propTypes = {
-  nodeRef: PropTypes.object,
+const Logo = () => {
+  return <h1 className="logo">Phonebook</h1>;
 };
 
 export default Logo;

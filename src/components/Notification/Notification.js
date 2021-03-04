@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 class Notification extends Component {
   state = {
-    nodeRef: this.props.nodeRef,
     errorMessage: this.props.message,
   };
   componentDidMount() {
@@ -11,12 +10,8 @@ class Notification extends Component {
   }
 
   render() {
-    const { nodeRef, errorMessage } = this.state;
-    return (
-      <div className="alert" ref={nodeRef}>
-        {errorMessage}
-      </div>
-    );
+    const { errorMessage } = this.state;
+    return <div className="alert">{errorMessage}</div>;
   }
 }
 
